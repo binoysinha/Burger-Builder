@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Burger from '@/components/Burger/Burger';
 import BuildControls from '@/components/Burger/BuildControls/BuildControls';
 import Modal from '@/components/UI/Modal/Modal';
+import OrderSummary from '@/components/Burger/OrderSummary/OrderSummary';
 
 const INGREDIENT_PRICES = {
     salad: 0.5,
@@ -20,7 +21,8 @@ class BurgerBuilder extends Component {
             meat: 0
         },
         purchaseable: false,
-        totalPrice: 4
+        totalPrice: 4,
+        purchasing: false
     }
 
     updatePurchaseState() {
@@ -76,6 +78,19 @@ class BurgerBuilder extends Component {
         });
     }
 
+    purchaseHandler = () => {
+        this.setState({ purchasing: true });
+    }
+
+    purchaseCancelHandler = () => {
+        this.setState({ purchasing: false });
+    }
+
+    purchaseContinueHandler = () => {
+        // this.setState({ purchasing: false });
+        console.log('continue');
+    }
+
     render() {
         const disabledInfo = {
             ...this.state.ingredients
@@ -84,18 +99,24 @@ class BurgerBuilder extends Component {
         for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0;
         }
-        console.log(this.state.purchaseable);
-
+    
         return (
             <React.Fragment>
-                <Modal />
+                <Modal showModal={this.state.purchasing} closeModal={this.purchaseCancelHandler}>
+                    <OrderSummary 
+                        purchaseCancel={this.purchaseCancelHandler}
+                        purchaseContinue={this.purchaseContinueHandler}
+                        ingredients={this.state.ingredients} 
+                        totalPrice={this.state.totalPrice}/>
+                </Modal>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls 
                     ingredientAdded={this.addIngredientHandler} 
                     ingredientRemoved={this.removeIngredientHandler} 
                     disabled={disabledInfo}
                     purchaseable={this.state.purchaseable} 
-                    totalPrice={this.state.totalPrice}/>
+                    totalPrice={this.state.totalPrice}
+                    purchaseNow={this.purchaseHandler}/>
             </React.Fragment>
         );
     }

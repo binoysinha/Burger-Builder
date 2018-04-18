@@ -1,0 +1,19 @@
+.Logo {
+    background-color: white;
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.Mobile {
+    height: 11%;
+    margin-bottom: 32px;
+}
+.Desktop {
+    height: 80%;
+}
+
+.Logo img {
+    height: 100%;
+}
+
