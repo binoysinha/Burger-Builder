@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Logo from '@/components/Logo/Logo';
-import NavigationItems from '../NavigationItems/NavigationItems';
+import Logo from '@/components/Logo';
+import NavigationItems from '../NavigationItems';
 import classes from './SideDrawer.css';
-import Backdrop from '@/components/UI/Backdrop/Backdrop'
+import Backdrop from '@/components/UI/Backdrop'
 const sideDrawer = (props) => {
     const state = props.isOpen ? 'Open' : 'Close';
     
