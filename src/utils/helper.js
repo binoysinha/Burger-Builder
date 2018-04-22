@@ -32,7 +32,7 @@ export function checkValidity(value, rules) {
     let isValid = true;
 
     if (rules.required) {
-        isValid = Boolean(value.trim()) && isValid; 
+        isValid = Boolean(value.trim()) && isValid;
     }
 
     if (rules.minLength) {
@@ -44,4 +44,23 @@ export function checkValidity(value, rules) {
     }
 
     return isValid;
+}
+
+export function generateSearchQuery(data) {
+    const queryParams = [];
+    for (let key in data) {
+        queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`);
+    }
+    queryParams.push(`price=${this.props.totalPrice.toFixed(2)}`);
+    const queryString = queryParams.join('&');
+    return queryString
+}
+
+export function decodeSearchQuery(qs) {
+    const query = new URLSearchParams(qs);
+    const qsObj = {};
+    for (let param of query.entries()) {
+        qsObj[param[0]] = Number(param[1]);
+    }
+    return qsObj;
 }

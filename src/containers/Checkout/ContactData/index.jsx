@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import axios from '@/axios-order';
 import { createInputObj, createSelectObj, checkValidity } from '@/utils/helper';
@@ -111,4 +112,9 @@ class ContactData extends Component {
     }
 }
 
-export default ContactData;
+const mapStateToProps = state => ({
+    ingredients: state.ingredients,
+    totalPrice: state.totalPrice
+});
+
+export default connect(mapStateToProps)(ContactData);
