@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as burgerBuilderActions from '@/store/actions';
+import * as actions from '@/store/actions';
 import Burger from '@/components/Burger';
 import BuildControls from '@/components/Burger/BuildControls';
 import Modal from '@/components/UI/Modal';
@@ -16,6 +16,7 @@ class BurgerBuilder extends Component {
 
     componentDidMount () {
         this.props.onInitIngredients();
+        this.props.onResetPurchase();
     }
 
     updatePurchaseState() {
@@ -125,15 +126,17 @@ class BurgerBuilder extends Component {
 }
 
 const mapStateToProps = state => ({
-     ingredients: state.ingredients,
-     totalPrice: state.totalPrice,
-     error: state.error
+     ingredients: state.burgerBuilder.ingredients,
+     totalPrice: state.burgerBuilder.totalPrice,
+     error: state.burgerBuilder.error
 });
 
 const mapDispatchToProps = dispatch => ({
-    onIngredientAdded: (igName) => dispatch(burgerBuilderActions.addIngredient(igName)),
-    onIngredientRemoved: (igName) => dispatch(burgerBuilderActions.removeIngredient(igName)),
-    onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
+    onIngredientAdded: (igName) => dispatch(actions.addIngredient(igName)),
+    onIngredientRemoved: (igName) => dispatch(actions.removeIngredient(igName)),
+    onInitIngredients: () => dispatch(actions.initIngredients()),
+    onResetPurchase: () => dispatch(actions.purchaseInit())
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder));
