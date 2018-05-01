@@ -13,7 +13,7 @@ const sideDrawer = (props) => {
             <div className={[classes.SideDrawer, classes[state]].join(' ')}>
                 <Logo orientation="Mobile"/>
                 <nav>
-                    <NavigationItems />
+                    <NavigationItems isAuthenticated={props.isAuthenticated} />
                 </nav>
             </div>
         </React.Fragment>

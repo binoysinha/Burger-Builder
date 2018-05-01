@@ -10,7 +10,7 @@ const toolbar = (props) => (
         <DrawerToggle close={props.openSideDrawer} />
         <Logo orientation="Desktop"/>
         <nav className={classes.DesktopOnly}>
-            <NavigationItems />
+            <NavigationItems isAuthenticated={props.isAuthenticated} />
         </nav>    
     </header>
 );

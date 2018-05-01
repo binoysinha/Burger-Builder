@@ -13,5 +13,8 @@ export {
 from './order';
 
 export {
-    auth
+    auth,
+    checkAuthTimeout,
+    setAuthRedirectPath,
+    checkAuthStatus
 } from './auth';

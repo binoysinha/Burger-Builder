@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+
 import * as actions from '@/store/actions';
 import { createInputObj, checkValidity } from '@/utils/helper';
 import Button from '@/components/UI/Button';
 import classes from './Auth.css';
-// import Spinner from '@/components/UI/Spinner';
+import Spinner from '@/components/UI/Spinner';
 import Input from '@/components/UI/Input';
+import withErrorHandler from '@/hoc/withErrorHandler';
 class Auth extends Component {
     
     state = {
@@ -14,6 +17,12 @@ class Auth extends Component {
             password: {...createInputObj('Password', 'password'), validation:{ required: true, minLength: 7}},
         },
         isSignup: true
+    }
+
+    componentDidMount() {
+        if (!this.props.isItemAdded && this.props.authRedirectPath !== '/') {
+            this.props.onSetRedirectPath('/');
+        }
     }
 
     loginHandler = (event) => {
@@ -53,27 +62,46 @@ class Auth extends Component {
             })
         }
 
-        let form = (
-            <form onSubmit={this.loginHandler}>
-                {formElements.map(({ config, id }) => (
-                    <Input 
-                        elementType={config.elementType} 
-                        elementConfig={config.elementConfig}
-                        value={config.value} 
-                        touched={config.touched}
-                        key={id}
-                        shouldValidate={config.validation}
-                        invalid={!config.valid}
-                        changed={(event) => {this.inputChangedHandler(event, id)}}
-                    />
-                ))}
-                <Button btnType="Success">Submit</Button>
-            </form>
-        );
+        let form = null;
+
+        if (this.props.loading) {
+            form = <Spinner />
+        } else {
+            form = (
+                <form onSubmit={this.loginHandler}>
+                    {formElements.map(({ config, id }) => (
+                        <Input 
+                            elementType={config.elementType} 
+                            elementConfig={config.elementConfig}
+                            value={config.value} 
+                            touched={config.touched}
+                            key={id}
+                            shouldValidate={config.validation}
+                            invalid={!config.valid}
+                            changed={(event) => {this.inputChangedHandler(event, id)}}
+                        />
+                    ))}
+                    <Button btnType="Success">Submit</Button>
+                </form>
+            );
+        }
+
+        let errorMessage = null;
+
+        if (this.props.error) {
+            errorMessage = (
+                <p>{this.props.error.message}</p>
+            )
+        }
 
         return (
             <div className={classes.Auth}>
+                {this.props.isAuthenticated 
+                    ? <Redirect to={this.props.authRedirectPath} /> 
+                    : null
+                }
                 <p>{this.state.isSignup ? 'SIGNUP' : 'SIGNIN'}</p>
+                {errorMessage}
                 {form}
                 <Button 
                     clicked={this.switchAuthModeHandler}
@@ -85,8 +113,17 @@ class Auth extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    onAuth: (email, pwd, authMode) => dispatch(actions.auth(email, pwd, authMode))
+const mapStateToProps = state => ({
+    loading: state.auth.loading,
+    error: state.auth.error,
+    isAuthenticated: state.auth.token !== null,
+    authRedirectPath: state.auth.authRedirectPath,
+    isItemAdded: state.burgerBuilder.isItemAdded
 });
 
-export default connect(null, mapDispatchToProps)(Auth);
+const mapDispatchToProps = dispatch => ({
+    onAuth: (email, pwd, authMode) => dispatch(actions.auth(email, pwd, authMode)),
+    onSetRedirectPath: path => dispatch(actions.setAuthRedirectPath(path))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Auth));

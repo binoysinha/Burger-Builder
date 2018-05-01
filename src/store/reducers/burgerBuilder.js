@@ -6,7 +6,8 @@ import {
 const initialState = {
     ingredients: null,
     error: false,
-    totalPrice: 4
+    totalPrice: 4,
+    isItemAdded: false
 };
 
 const INGREDIENT_PRICES = {
@@ -23,7 +24,8 @@ const addIngredient = (state, action) => {
     const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
     const updatedState = {
         ingredients: updatedIngredients,
-        totalPrice: state.totalPrice + INGREDIENT_PRICES[action.igName]
+        totalPrice: state.totalPrice + INGREDIENT_PRICES[action.igName],
+        isItemAdded: true
     }
     return updateObject(state, updatedState);
 }
@@ -47,6 +49,7 @@ const setIngredient = (state, action) => ({
             meat: action.ingredients.meat
         },
         totalPrice: 4,
+        isItemAdded: false,
         error: false
 });
 
