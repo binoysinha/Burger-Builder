@@ -9,26 +9,32 @@ import Spinner from '@/components/UI/Spinner';
 class Orders extends Component {
     
     componentDidMount() {
-        console.log('orders');
-        this.props.onFetchOrders(this.props.token);
+        this.props.onFetchOrders(this.props.token, this.props.userId);
     }
 
     render () {
-        let orders = (
-            <Fragment>
-                {this.props.fetchedOrders.map(order => (
-                    <Order 
-                        key={order.id} 
-                        ingredients={order.ingredients}
-                        totalPrice={order.price.toFixed(2)}
-                    />
-                ))}
-            </Fragment>
-        );
+        let orders = null;
+        if (this.props.fetchedOrders.length) {
+            orders = (
+                <Fragment>
+                    {this.props.fetchedOrders.map(order => (
+                        <Order 
+                            key={order.id} 
+                            ingredients={order.ingredients}
+                            totalPrice={order.price.toFixed(2)}
+                        />
+                    ))}
+                </Fragment>
+            );
+        } else {
+            orders = <p>You haven't placed any Orders</p>;
+        }
 
         if (this.props.loading) {
             orders = <Spinner />
         }
+            
+        
         return orders;
     }
 }
@@ -36,11 +42,12 @@ class Orders extends Component {
 const mapStateToProps = state => ({
     loading: state.order.loading,
     fetchedOrders: state.order.orders,
-    token: state.auth.token
+    token: state.auth.token,
+    userId: state.auth.userId
 });
 
 const mapDispatchToProps = dispatch => ({
-    onFetchOrders: (token) => dispatch(actions.fetchOrders(token))
+    onFetchOrders: (token, userId) => dispatch(actions.fetchOrders(token, userId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Orders));

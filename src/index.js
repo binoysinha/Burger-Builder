@@ -20,8 +20,12 @@ import registerServiceWorker from './registerServiceWorker';
 //         }
 //     }
 // };
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+let composeEnhancers = compose;
+if (process.env.NODE_ENV !== 'production') {
+    const {whyDidYouUpdate} = require('why-did-you-update');
+    whyDidYouUpdate(React);
+    composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+}
 
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 
